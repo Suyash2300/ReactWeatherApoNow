@@ -9,7 +9,8 @@ import {
 } from "react-icons/wi";
 import { FaSearch, FaMoon, FaSun } from "react-icons/fa";
 
-const API_KEY = "518fdba2628f1b16f46e1423d46b5baa";
+// ✅ Correct
+const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
 function App() {
   const [city, setCity] = useState("");
@@ -21,7 +22,8 @@ function App() {
 
   // Load from localStorage
   useEffect(() => {
-    const storedHistory = JSON.parse(localStorage.getItem("weatherHistory")) || [];
+    const storedHistory =
+      JSON.parse(localStorage.getItem("weatherHistory")) || [];
     setHistory(storedHistory);
   }, []);
 
@@ -85,7 +87,9 @@ function App() {
         `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${API_KEY}&units=metric`
       );
       const data = await res.json();
-      const daily = data.list.filter((item) => item.dt_txt.includes("12:00:00"));
+      const daily = data.list.filter((item) =>
+        item.dt_txt.includes("12:00:00")
+      );
       setForecast(daily);
     } catch (err) {
       console.error("Forecast error:", err);
@@ -93,7 +97,10 @@ function App() {
   };
 
   const updateHistory = (newCity) => {
-    const updated = [newCity, ...history.filter((c) => c !== newCity)].slice(0, 5);
+    const updated = [newCity, ...history.filter((c) => c !== newCity)].slice(
+      0,
+      5
+    );
     setHistory(updated);
     localStorage.setItem("weatherHistory", JSON.stringify(updated));
   };
@@ -105,7 +112,8 @@ function App() {
     if (condition.includes("rain")) return <WiRain size={60} />;
     if (condition.includes("thunder")) return <WiThunderstorm size={60} />;
     if (condition.includes("snow")) return <WiSnow size={60} />;
-    if (condition.includes("mist") || condition.includes("fog")) return <WiFog size={60} />;
+    if (condition.includes("mist") || condition.includes("fog"))
+      return <WiFog size={60} />;
     return <WiDaySunny size={60} />;
   };
 
